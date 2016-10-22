@@ -6,25 +6,33 @@ use rand::Rng;
 
 fn main() {
 
-    println!("Guess the number.");
-
-    println!("Please input your guess.");
+    println!("Guess the number game..");
 
     let secret_number = rand::thread_rng().gen_range(1,101);
 
-    let mut guess = String::new();
+    loop {
+        println!("Please input a number.");
 
-    io::stdin().read_line(&mut guess)
-        .expect("Failed to read line.");
 
-    let guess: u32 = guess.trim().parse()
-        .expect("Please guess a number");
+        let mut guess = String::new();
 
-    println!("You guessed: {}", guess);
+        io::stdin().read_line(&mut guess)
+            .expect("Failed to read line.");
 
-    match guess.cmp(&secret_number) {
-        Ordering::Less => println!("Too low"),
-        Ordering::Greater => println!("Too high"),
-        Ordering::Equal => println!("You guessed correctly"),
+        let guess: u32 = match guess.trim().parse() {
+            Ok(num) => num,
+            Err(_) => continue,
+        };
+
+        println!("You guessed: {}", guess);
+
+        match guess.cmp(&secret_number) {
+            Ordering::Less => println!("Too low"),
+            Ordering::Greater => println!("Too high"),
+            Ordering::Equal => {
+                println!("You guessed correctly!");
+                break;
+            }
+        }
     }
 }
